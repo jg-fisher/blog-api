@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -16,9 +17,15 @@ func main() {
 	connString = "john:1234@tcp(127.0.0.1:3306)/blog"
 	models.InitDB(connString)
 
+	// CORS config
+	// headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	// TODO: set this allowed origin in env, called with os.Getenv
+	originsOk := handlers.AllowedOrigins([]string{"http://localhost:3000"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+
 	router := mux.NewRouter()
 	router.HandleFunc("/posts", getPosts).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":8000", handlers.CORS(originsOk, methodsOk)(router)))
 }
 
 func getPosts(w http.ResponseWriter, r *http.Request) {

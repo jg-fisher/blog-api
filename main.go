@@ -14,6 +14,7 @@ func main() {
 
 	// Initialize database context for package models
 	// TODO: Set up DI, reference the article you were reading "Practical Persistence in Go: Organizing Data Access"
+	// TODO: Add this connection string to env file
 	var connString string
 	connString = "john:1234@tcp(127.0.0.1:3306)/blog"
 	models.InitDB(connString)
